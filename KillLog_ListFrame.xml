@@ -1,0 +1,864 @@
+﻿<!--
+path: /KillLog/
+filename: KillLog_ListFrame.xml
+author: Daniel Risse <dan@risse.com>
+update: Detritis <Slynx - Quel'Thalas>	
+created: Mon, 17 Jan 2005 17:33:00 -0800
+updated: Thurs, 04 Jan 2007 15:30:00
+
+list frame: a listing of the creeps you have fought
+-->
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+	..\FrameXML\UI.xsd">
+	<Script file="KillLog_ListFrame.lua"/>
+	<Script file="QuickSort.lua"/>
+    
+	<!-- template for creep name in faux scroll frame -->
+    <Button name="KillLog_ListTitleButtonTemplate" virtual="true">
+		<Size>
+			<AbsDimension x="295" y="16"/>
+		</Size>
+		<Layers>
+			<Layer level="BACKGROUND">
+                <FontString name="$parentCreep" inherits="GameFontNormal" justifyH="LEFT">
+					<Size>
+						<AbsDimension x="275" y="16"/>
+					</Size>
+					<Anchors>
+						<Anchor point="LEFT">
+							<Offset>
+								<AbsDimension x="25" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTag" inherits="GameFontNormal" justifyH="RIGHT">
+					<Size>
+						<AbsDimension x="80" y="16"/>
+					</Size>
+					<Anchors>
+						<Anchor point="RIGHT">
+							<Offset>
+								<AbsDimension x="-2" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentGroupMates" inherits="GameFontNormalSmall" justifyH="RIGHT">
+					<Size>
+						<AbsDimension x="0" y="16"/>
+					</Size>
+					<Anchors>
+						<Anchor point="LEFT">
+							<Offset>
+								<AbsDimension x="8" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<Texture name="$parentCheck" file="Interface\Buttons\UI-CheckBox-Check" hidden="true">
+					<Size>
+						<AbsDimension x="16" y="16"/>
+					</Size>
+					<Anchors>
+						<Anchor point="LEFT">
+							<Offset>
+								<AbsDimension x="50" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad>
+				this:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+			</OnLoad>
+			<OnClick>
+				KillLog_ListTitleButton_OnClick(arg1);
+			</OnClick>
+			<OnLeave>
+				if (not KillLog_ListFrame.selectedCreepID or this:GetID() ~= (KillLog_ListFrame.selectedCreepID - FauxScrollFrame_GetOffset(KillLog_ListScrollFrame))) then
+					getglobal(this:GetName().."Tag"):SetTextColor(this.r, this.g, this.b);
+				end
+			</OnLeave>
+		</Scripts>
+		<NormalTexture file="Interface\Buttons\UI-MinusButton-UP">
+			<Size>
+				<AbsDimension x="16" y="16"/>
+			</Size>
+			<Anchors>
+				<Anchor point="LEFT">
+					<Offset>
+						<AbsDimension x="3" y="0"/>
+					</Offset>
+				</Anchor>
+			</Anchors>
+		</NormalTexture>
+		<HighlightTexture name="$parentHighlight" file="Interface\Buttons\UI-PlusButton-Hilight" alphaMode="ADD">
+			<Size>
+				<AbsDimension x="16" y="16"/>
+			</Size>
+			<Anchors>
+				<Anchor point="LEFT">
+					<Offset>
+						<AbsDimension x="3" y="0"/>
+					</Offset>
+				</Anchor>
+			</Anchors>
+		</HighlightTexture>
+	</Button>
+
+	<!-- template for creep portrait in list detail -->
+	<Texture name="KillLog_ListPortraitTemplate" hidden="true" virtual="true">
+		<Size>
+			<AbsDimension x="43" y="43"/>
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="KillLog_ListFrameHorizontalBarLeft" relativePoint="BOTTOMLEFT">
+				<Offset>
+					<AbsDimension x="6" y="2"/>
+				</Offset>
+			</Anchor>
+		</Anchors>
+	</Texture>
+
+	<!-- template for label and value in list detail -->
+	<Frame name="KillLog_ListStatTemplate" virtual="true">
+		<Size>
+			<AbsDimension x="100" y="20"/>
+		</Size>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentLabel" inherits="GameFontNormal" justifyH="LEFT">
+					<Anchors>
+						<Anchor point="LEFT"/>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentStat" inherits="GameFontHighlight" justifyH="RIGHT">
+					<Anchors>
+						<Anchor point="RIGHT"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+	</Frame>
+
+	<Frame name="KillLog_ListFrame" setAllPoints="true" enableMouse="true" parent="KillLogFrame" hidden="true" id="2">
+		<HitRectInsets>
+			<AbsInset left="0" right="30" top="0" bottom="75"/>
+		</HitRectInsets>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture name="KillLog_ListFrameHorizontalBarLeft" file="Interface\ClassTrainerFrame\UI-ClassTrainer-HorizontalBar">
+					<Size>
+						<AbsDimension x="256" y="16"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="15" y="-312"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<TexCoords left="0" right="1.0" top="0" bottom="0.25"/>
+				</Texture>
+				<Texture name="KillLog_ListFrameHorizontalBarRight" file="Interface\ClassTrainerFrame\UI-ClassTrainer-HorizontalBar">
+					<Size>
+						<AbsDimension x="75" y="16"/>
+					</Size>
+					<Anchors>
+						<Anchor point="LEFT" relativeTo="KillLog_ListFrameHorizontalBarLeft" relativePoint="RIGHT">
+							<Offset>
+								<AbsDimension x="0" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<TexCoords left="0" right="0.29296875" top="0.25" bottom="0.5"/>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Frame name="KillLog_ListFrameExpandButtonFrame">
+				<Size>
+					<AbsDimension x="54" y="32"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="20" y="-71"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer level="BACKGROUND">
+						<Texture name="KillLog_ListFrameExpandTabLeft" file="Interface\QuestFrame\UI-QuestLogSortTab-Left">
+							<Size>
+								<AbsDimension x="8" y="32"/>
+							</Size>
+							<Anchors>
+								<Anchor point="TOPLEFT">
+									<Offset>
+										<AbsDimension x="0" y="6"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</Texture>
+						<Texture name="KillLog_ListFrameExpandTabMiddle" file="Interface\QuestFrame\UI-QuestLogSortTab-Middle">
+							<Size>
+								<AbsDimension x="42" y="32"/>
+							</Size>
+							<Anchors>
+								<Anchor point="LEFT" relativeTo="KillLog_ListFrameExpandTabLeft" relativePoint="RIGHT">
+									<Offset>
+										<AbsDimension x="0" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</Texture>
+						<Texture file="Interface\QuestFrame\UI-QuestLogSortTab-Right">
+							<Size>
+								<AbsDimension x="8" y="32"/>
+							</Size>
+							<Anchors>
+								<Anchor point="LEFT" relativeTo="KillLog_ListFrameExpandTabMiddle" relativePoint="RIGHT"/>
+							</Anchors>
+						</Texture>
+					</Layer>
+				</Layers>
+				<Frames>
+					<Button name="KillLog_ListFrameCollapseAllButton" hidden="false" inherits="KillLog_ListTitleButtonTemplate">
+						<Size>
+							<AbsDimension x="40" y="22"/>
+						</Size>
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="KillLog_ListFrameExpandTabLeft" relativePoint="RIGHT">
+								<Offset>
+									<AbsDimension x="-3" y="-3"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer level="BACKGROUND">
+								<FontString name="$parentTitle" inherits="GameFontNormal" justifyH="LEFT">
+									<Size>
+										<AbsDimension x="200" y="16"/>
+									</Size>
+									<Anchors>
+										<Anchor point="LEFT">
+											<Offset>
+												<AbsDimension x="25" y="0"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+							</Layer>
+						</Layers>
+
+						<Scripts>
+							<OnLoad>
+								--getglobal(this:GetName()):SetText(ALL);
+								getglobal("KillLog_ListFrameCollapseAllButtonTitle"):SetText(ALL);
+							</OnLoad>
+							<OnClick>
+								KillLog_ListFrame_CollapseAllButton_OnClick();
+							</OnClick>
+						</Scripts>
+					</Button>
+
+					<Button name="KillLog_ListFrame_ToggleTab3" inherits="TabButtonTemplate" text="KILLLOG_LIST_LEVEL_XX" id="3">
+						<Anchors>
+							<Anchor point="TOPRIGHT" relativeTo="KillLog_ListFrame">
+								<Offset>
+									<AbsDimension x="-60" y="-62"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnShow>
+								if ( not KillLog_ListFrame.displayLevel ) then
+									KillLog_ListFrame.displayLevel = UnitLevel("player");
+								end
+								this:SetText(KILLLOG_LIST_LEVEL.." "..KillLog_ListFrame.displayLevel);
+							</OnShow>
+							<OnClick>
+								KillLog_ListFrame_Tab_OnClick();
+							</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="KillLog_ListFrame_ToggleTab2" inherits="TabButtonTemplate" text="KILLLOG_LIST_OVERALL" id="2">
+						<Anchors>
+							<Anchor point="RIGHT" relativeTo="KillLog_ListFrame_ToggleTab3" relativePoint="LEFT"/>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								KillLog_ListFrame_Tab_OnClick();
+							</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="KillLog_ListFrame_ToggleTab1" inherits="TabButtonTemplate" text="KILLLOG_LIST_SESSION" id="1">
+						<Anchors>
+							<Anchor point="RIGHT" relativeTo="KillLog_ListFrame_ToggleTab2" relativePoint="LEFT"/>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								PanelTemplates_SelectTab(this);
+								PanelTemplates_TabResize(0);
+								getglobal(this:GetName().."HighlightTexture"):SetWidth(this:GetTextWidth() + 31);
+							</OnLoad>
+							<OnClick>
+								KillLog_ListFrame_Tab_OnClick();
+							</OnClick>
+						</Scripts>
+					</Button>
+				</Frames>
+			</Frame>
+
+			<Frame name="KillLog_ListFrame_LevelDropDown" inherits="UIDropDownMenuTemplate" id="1">
+				<Anchors>
+					<Anchor point="TOPRIGHT" relativeTo="KillLog_ListFrame">
+						<Offset>
+							<AbsDimension x="-49" y="-41"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						--KillLog_ListFrame_LevelDropDown_OnLoad();
+						UIDropDownMenu_SetWidth(54);
+					</OnLoad>
+					<OnShow>
+						KillLog_ListFrame_LevelDropDown_OnShow();
+					</OnShow>
+				</Scripts>
+			</Frame>
+			<Frame name="KillLog_ListFrame_SortDropDown" inherits="UIDropDownMenuTemplate" id="2">
+				<Anchors>
+					<Anchor point="RIGHT" relativeTo="KillLog_ListFrame_LevelDropDown" relativePoint="LEFT">
+						<Offset>
+							<AbsDimension x="0" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						KillLog_ListFrame_SortDropDown_OnLoad();
+					</OnLoad>
+					<OnShow>
+						KillLog_ListFrame_SortDropDown_OnShow();
+					</OnShow>
+				</Scripts>
+			</Frame>
+
+			<Frame name="KillLog_List_HighlightFrame" hidden="true">
+				<Size>
+					<AbsDimension x="293" y="16"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT"/>
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<Texture name="KillLog_List_CreepHighlight" file="Interface\QuestFrame\UI-QuestLogTitleHighlight" alphaMode="ADD"/>
+					</Layer>
+				</Layers>
+			</Frame>
+			<Frame name="KillLog_List_TitleDropDown" inherits="UIDropDownMenuTemplate" id="1" hidden="true">
+				<Size>
+					<AbsDimension x="10" y="10"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOP">
+						<Offset>
+							<AbsDimension x="10" y="-60"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						KillLog_List_TitleDropDown_OnLoad();
+					</OnLoad>
+				</Scripts>
+			</Frame>
+			<Button name="KillLog_List_Title1" inherits="KillLog_ListTitleButtonTemplate" id="1" hidden="true">
+                <Anchors>
+					<Anchor point="LEFT" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="22" y="-108"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="KillLog_List_Title2" inherits="KillLog_ListTitleButtonTemplate" id="2" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="KillLog_List_Title1">
+						<Offset>
+							<AbsDimension x="0" y="-18"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="KillLog_List_Title3" inherits="KillLog_ListTitleButtonTemplate" id="3" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="KillLog_List_Title2">
+						<Offset>
+							<AbsDimension x="0" y="-18"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="KillLog_List_Title4" inherits="KillLog_ListTitleButtonTemplate" id="4" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="KillLog_List_Title3">
+						<Offset>
+							<AbsDimension x="0" y="-18"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="KillLog_List_Title5" inherits="KillLog_ListTitleButtonTemplate" id="5" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="KillLog_List_Title4">
+						<Offset>
+							<AbsDimension x="0" y="-18"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="KillLog_List_Title6" inherits="KillLog_ListTitleButtonTemplate" id="6" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="KillLog_List_Title5">
+						<Offset>
+							<AbsDimension x="0" y="-18"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="KillLog_List_Title7" inherits="KillLog_ListTitleButtonTemplate" id="7" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="KillLog_List_Title6">
+						<Offset>
+							<AbsDimension x="0" y="-18"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="KillLog_List_Title8" inherits="KillLog_ListTitleButtonTemplate" id="8" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="KillLog_List_Title7">
+						<Offset>
+							<AbsDimension x="0" y="-18"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="KillLog_List_Title9" inherits="KillLog_ListTitleButtonTemplate" id="9" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="KillLog_List_Title8">
+						<Offset>
+							<AbsDimension x="0" y="-18"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="KillLog_List_Title10" inherits="KillLog_ListTitleButtonTemplate" id="10" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="KillLog_List_Title9">
+						<Offset>
+							<AbsDimension x="0" y="-18"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="KillLog_List_Title11" inherits="KillLog_ListTitleButtonTemplate" id="11" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="KillLog_List_Title10">
+						<Offset>
+							<AbsDimension x="0" y="-18"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="KillLog_List_Title12" inherits="KillLog_ListTitleButtonTemplate" id="12" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="KillLog_List_Title11">
+						<Offset>
+							<AbsDimension x="0" y="-18"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<ScrollFrame name="KillLog_ListScrollFrame" inherits="FauxScrollFrameTemplate">
+				<Size>
+					<AbsDimension x="296" y="220"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPRIGHT" relativeTo="KillLog_ListFrame" relativePoint="TOPRIGHT">
+						<Offset>
+							<AbsDimension x="-67" y="-97"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnVerticalScroll>
+						FauxScrollFrame_OnVerticalScroll(KILLLOG_LIST_TITLEBUTTON_HEIGHT, KillLog_ListFrame_Update)
+					</OnVerticalScroll>
+				</Scripts>
+			</ScrollFrame>
+			<Frame name="KillLog_ListDetailFrame" enableMouse="true">
+				<Size>
+					<AbsDimension x="296" y="107"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOP" relativeTo="KillLog_ListScrollFrame" relativePoint="BOTTOM">
+						<Offset>
+							<AbsDimension x="0" y="-8"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer level="OVERLAY">
+						<FontString name="KillLog_ListFrame_DetailCreepName" inherits="GameFontNormalLarge" justifyH="LEFT">
+							<Size>
+								<AbsDimension x="245" y="22"/>
+							</Size>
+							<Anchors>
+								<Anchor point="TOPLEFT" relativeTo="KillLog_ListDetailFrame" relativePoint="TOPLEFT">
+									<Offset>
+										<AbsDimension x="80" y="2"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+						<FontString name="KillLog_ListFrame_DetailCreepSubName" inherits="GameFontHighlight" justifyH="LEFT">
+							<Size>
+								<AbsDimension x="245" y="18"/>
+							</Size>
+							<Anchors>
+								<Anchor point="TOP" relativeTo="KillLog_ListFrame_DetailCreepName" relativePoint="BOTTOM"/>
+							</Anchors>
+						</FontString>
+						<FontString name="KillLog_ListFrame_DetailCreepLocation" inherits="GameFontHighlightSmall" justifyH="LEFT">
+							<Size>
+								<AbsDimension x="245" y="18"/>
+							</Size>
+							<Anchors>
+								<Anchor point="TOP" relativeTo="KillLog_ListFrame_DetailCreepSubName" relativePoint="BOTTOM"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Frames>
+					<Frame name="KillLog_ListFrame_Kill" inherits="KillLog_ListStatTemplate">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="KillLog_ListDetailFrame" relativePoint="TOPLEFT">
+								<Offset>
+									<AbsDimension x="5" y="-60"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								KillLog_ListFrame_KillLabel:SetText(KILLLOG_LABEL_KILL);
+								KillLog_ListFrame_KillStat:SetText("999");
+							</OnLoad>
+						</Scripts>
+					</Frame>
+					<Frame name="KillLog_ListFrame_Death" inherits="KillLog_ListStatTemplate">
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="KillLog_ListFrame_Kill" relativePoint="RIGHT">
+								<Offset>
+									<AbsDimension x="5" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								KillLog_ListFrame_DeathLabel:SetText(KILLLOG_LABEL_DEATH);
+								KillLog_ListFrame_DeathStat:SetText("99");
+							</OnLoad>
+						</Scripts>
+					</Frame>
+					<Frame name="KillLog_ListFrame_Xp" inherits="KillLog_ListStatTemplate">
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="KillLog_ListFrame_Death" relativePoint="RIGHT">
+								<Offset>
+									<AbsDimension x="5" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								KillLog_ListFrame_XpLabel:SetText(KILLLOG_LABEL_XP);
+								KillLog_ListFrame_XpStat:SetText("999999");
+							</OnLoad>
+						</Scripts>
+					</Frame>
+					<Frame name="KillLog_ListFrame_Rested" inherits="KillLog_ListStatTemplate">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="KillLog_ListFrame_Kill" relativePoint="BOTTOMLEFT"/>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								KillLog_ListFrame_RestedLabel:SetText(KILLLOG_LABEL_RESTED);
+								KillLog_ListFrame_RestedStat:SetText("9999");
+							</OnLoad>
+						</Scripts>
+					</Frame>
+					<Frame name="KillLog_ListFrame_Group" inherits="KillLog_ListStatTemplate">
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="KillLog_ListFrame_Rested" relativePoint="RIGHT">
+								<Offset>
+									<AbsDimension x="5" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								KillLog_ListFrame_GroupLabel:SetText(KILLLOG_LABEL_GROUP);
+								KillLog_ListFrame_GroupStat:SetText("9999");
+							</OnLoad>
+						</Scripts>
+					</Frame>
+					<Frame name="KillLog_ListFrame_Raid" inherits="KillLog_ListStatTemplate">
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="KillLog_ListFrame_Group" relativePoint="RIGHT">
+								<Offset>
+									<AbsDimension x="5" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								KillLog_ListFrame_RaidLabel:SetText(KILLLOG_LABEL_RAID);
+								KillLog_ListFrame_RaidStat:SetText("-9999");
+							</OnLoad>
+						</Scripts>
+					</Frame>
+					
+                    <Button name="KillLog_ListPortrait">
+						<Layers>
+							<Layer level="BACKGROUND">
+								<Texture name="KillLog_ListFrame_CreepPortrait1" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait2" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait3" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait4" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait5" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait6" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait7" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait8" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait9" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait10" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait11" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait12" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait13" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait14" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait15" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait16" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait17" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait18" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait19" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait20" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait21" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait22" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait23" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait24" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait25" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait26" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait27" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait28" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait29" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait30" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait31" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait32" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait33" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait34" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait35" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait36" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait37" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait38" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait39" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait40" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait41" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait42" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait43" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait44" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait45" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait46" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait47" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait48" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait49" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait50" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait51" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait52" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait53" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait54" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait55" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait56" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait57" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait58" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait59" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait60" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait61" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait62" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait63" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait64" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait65" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait66" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait67" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait68" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait69" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait70" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait71" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait72" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait73" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait74" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait75" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait76" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait77" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait78" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait79" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait80" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait81" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait82" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait83" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait84" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait85" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait86" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait87" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait88" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait89" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait90" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait91" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait92" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait93" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait94" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait95" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait96" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait97" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait98" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortrait99" inherits="KillLog_ListPortraitTemplate"/>
+								<Texture name="KillLog_ListFrame_CreepPortraitDefault" inherits="KillLog_ListPortraitTemplate"/>
+							</Layer>
+						</Layers>
+						<Scripts>
+							<OnLoad>
+								KillLog_ListFrame_CreepPortraitDefault:SetTexture("Interface\\CharacterFrame\\TemporaryPortrait-Monster");
+								KillLog_ListFrame_CreepPortraitDefault:Show();
+							</OnLoad>
+						</Scripts>
+					</Button>
+                    
+					<Frame name="KillLog_ListFrame_Icons">
+						<Layers>
+							<Layer level="ARTWORK">
+								<Texture file="Interface\TargetingFrame\UI-TargetingFrame-Skull">
+									<Size>
+										<AbsDimension x="11" y="11"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_ListDetailFrame">
+											<Offset>
+												<AbsDimension x="31" y="-33"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</Texture>
+								<Texture name="KillLog_ListFrame_CreepPortraitPVPIcon" hidden="true">
+									<Size>
+										<AbsDimension x="43" y="43"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_ListDetailFrame">
+											<Offset>
+												<AbsDimension x="30" y="-8"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</Texture>
+							</Layer>
+						</Layers>
+						<Scripts>
+							<OnLoad>
+								this:SetFrameLevel(this:GetFrameLevel() + 2);
+							</OnLoad>
+						</Scripts>
+					</Frame>
+					<Frame name="KillLog_ListFrame_CreepPortraitBorderNormal" hidden="true">
+						<Layers>
+							<Layer level="ARTWORK">
+								<Texture file="Interface\TargetingFrame\UI-TargetingFrame">
+									<Size>
+										<AbsDimension x="46" y="52"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_ListFrameHorizontalBarLeft" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="7" y="2"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+									<TexCoords left="0.58984375" right="0.85546875" top="0.0859375" bottom="0.6875"/>
+								</Texture>
+							</Layer>
+						</Layers>
+					</Frame>
+					<Frame name="KillLog_ListFrame_CreepPortraitBorderSpecial">
+						<Layers>
+							<Layer level="ARTWORK">
+								<Texture name="KillLog_ListFrame_CreepPortraitBorderSpecialTexture" file="Interface\TargetingFrame\UI-TargetingFrame-Elite">
+									<Size>
+										<AbsDimension x="80" y="68"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_ListFrameHorizontalBarLeft" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="-2" y="10"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+									<TexCoords left="0.5390625" right="1.0" top="0" bottom="0.78125"/>
+								</Texture>
+							</Layer>
+							<Layer level="OVERLAY">
+								<!-- we want to use black to block part of the target frame from showing -->
+								<Texture file="Interface\PaperDollInfoFrame\UI-Character-General-BottomLeft">
+									<Size>
+										<AbsDimension x="20" y="28"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_ListFrame_CreepPortraitBorderSpecialTexture" relativePoint="TOPLEFT">
+											<Offset>
+												<AbsDimension x="-11" y="-16"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+									<TexCoords left="0" right="0.078125" top="0" bottom="0.109375"/>
+								</Texture>
+							</Layer>
+						</Layers>
+					</Frame>
+				</Frames>
+				<Scripts>
+					<OnLoad>
+						KillLog_ListFrame_DetailCreepName:SetText("Ferocious Jackalope");
+						KillLog_ListFrame_DetailCreepSubName:SetText(KILLLOG_LABEL_LEVEL.." 97-99 Beast");
+						KillLog_ListFrame_DetailCreepLocation:SetText("Stonetalon Mountains 99,99");
+						this.portrait = "Default";
+					</OnLoad>
+					<OnClick>
+						KillLog_ListDetailFrame_OnClick();
+					</OnClick>
+				</Scripts>
+			</Frame>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				KillLog_ListFrame_OnLoad();
+			</OnLoad>
+			<OnShow>
+				KillLog_ListFrame_OnShow();
+			</OnShow>
+		</Scripts>
+	</Frame>
+</Ui>

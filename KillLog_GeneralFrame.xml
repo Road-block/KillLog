@@ -1,0 +1,794 @@
+﻿<!--
+path: /KillLog/
+filename: KillLog_GeneralFrame.xml
+author: Daniel Risse <dan@risse.com>
+update: Detritis <Slynx - Quel'Thalas>	
+created: Mon, 17 Jan 2005 17:33:00 -0800
+updated: Thurs, 26 Jan 2007
+
+general frame: Listing of interesting statistics
+-->
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+	..\FrameXML\UI.xsd">
+	<Script file="KillLog_GeneralFrame.lua"/>
+	<Frame name="KillLog_GeneralFrame" setAllPoints="true" enableMouse="true" parent="KillLogFrame" hidden="true" id="1">
+		<HitRectInsets>
+			<AbsInset left="0" right="30" top="0" bottom="70"/>
+		</HitRectInsets>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture name="KillLog_GeneralFrameTopLeft" file="Interface\ItemTextFrame\UI-ItemText-TopLeft">
+					<Size>
+						<AbsDimension x="217" y="183"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="20" y="-72"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<TexCoords left="0.07421875" right="1.0" top="0.28515625" bottom="1.0"/>
+				</Texture>
+				<Texture name="KillLog_GeneralFrameTopRight" file="Interface\Spellbook\UI-SpellbookPanel-TopRight">
+					<Size>
+						<AbsDimension x="79" y="183"/>
+					</Size>
+					<Anchors>
+						<Anchor point="LEFT" relativeTo="KillLog_GeneralFrameTopLeft" relativePoint="RIGHT">
+							<Offset>
+								<AbsDimension x="0" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<TexCoords left="0" right="0.671875" top="0.28515625" bottom="1.0"/>
+				</Texture>
+				<Texture name="KillLog_GeneralFrameBottomLeft" file="Interface\ItemTextFrame\UI-ItemText-BotLeft">
+					<Size>
+						<AbsDimension x="217" y="175"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPRIGHT" relativeTo="KillLog_GeneralFrameTopLeft" relativePoint="BOTTOMRIGHT">
+							<Offset>
+								<AbsDimension x="0" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<TexCoords left="0.07421875" right="1.0" top="0.0" bottom="0.68359375"/>
+				</Texture>
+				<Texture name="KillLog_GeneralFrameBottomRight" file="Interface\Spellbook\UI-SpellbookPanel-BotRight">
+					<Size>
+						<AbsDimension x="79" y="175"/>
+					</Size>
+					<Anchors>
+						<Anchor point="LEFT" relativeTo="KillLog_GeneralFrameBottomLeft" relativePoint="RIGHT">
+							<Offset>
+								<AbsDimension x="0" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<TexCoords left="0" right="0.671875" top="0.0" bottom="0.68359375"/>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK">
+				<Texture name="KillLog_GeneralFrameSpacer" file="Interface\ClassTrainerFrame\UI-ClassTrainer-TopRight">
+					<Size>
+						<AbsDimension x="30" y="50"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameTopRight" relativePoint="TOPRIGHT">
+							<Offset>
+								<AbsDimension x="-1" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<TexCoords left="0.4453125" right="0.6875" top="0.3671875" bottom="0.56640625"/>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Frames>
+			<ScrollFrame name="KillLog_GeneralFrameScrollFrame" inherits="FauxScrollFrameTemplate">
+				<Size>
+					<AbsDimension x="290" y="351"/> 
+				</Size>
+				<Anchors>
+					<Anchor point="TOPRIGHT">
+						<Offset>
+							<AbsDimension x="-66" y="-78"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer level="BACKGROUND">
+						<Texture name="$parent_BarTop" file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
+							<Size>
+								<AbsDimension x="30" y="256"/>
+							</Size>
+							<Anchors>
+								<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameSpacer" relativePoint="TOPLEFT">
+									<Offset>
+										<AbsDimension x="2" y="-2"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+							<TexCoords left="0" right="0.484375" top="0" bottom="1.0"/>
+						</Texture>
+						<Texture name="$parent_BarBottom" file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
+							<Size>
+								<AbsDimension x="30" y="108"/>
+							</Size>
+							<Anchors>
+								<Anchor point="TOP" relativeTo="$parent_BarTop" relativePoint="BOTTOM">
+									<Offset>
+										<AbsDimension x="0" y="5"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+							<TexCoords left="0.515625" right="1.0" top="0" bottom="0.421875"/>
+						</Texture>
+					</Layer>
+				</Layers>
+				<ScrollChild>
+					<Frame name="KillLog_GeneralFrameMainFrame">
+						<Size>
+							<AbsDimension x="290" y="350"/>
+						</Size>
+						<Layers>
+							<Layer level="BACKGROUND">
+								<FontString name="KillLog_GeneralFrameHitTitle" inherits="QuestTitleFont" justifyH="LEFT" text="KILLLOG_MAXHIT_TITLE">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT">
+											<Offset>
+												<AbsDimension x="5" y="-10"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameHit1" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameHitTitle" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameHit2" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameHit1" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameHit3" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameHit2" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameHit4" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameHit3" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameHit5" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameHit4" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameHit6" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameHit5" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameHit7" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameHit6" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameHit8" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameHit7" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameHit9" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameHit8" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameHit10" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameHit9" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameHit11" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameHit10" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameHit12" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameHit11" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameHit13" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameHit12" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameHit14" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameHit13" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameHit15" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameHit14" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameHit16" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameHit15" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameHit17" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameHit16" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameHit18" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameHit17" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameHit19" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameHit18" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+                                
+
+								<FontString name="KillLog_GeneralFrameXpTitle" inherits="QuestTitleFont" justifyH="LEFT" text="KILLLOG_EXPERIENCE_TITLE">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameHit10" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameXp1" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameXpTitle" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameXp2" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameXp1" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameXp3" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameXp2" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameXp4" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameXp3" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameXp5" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameXp4" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameXp6" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameXp5" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameXp7" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameXp6" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameXp8" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameXp7" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameXp9" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameXp8" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameXp10" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameXp9" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameXp11" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameXp10" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameXp12" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameXp11" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameXp13" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameXp12" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameXp14" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameXp13" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameXp15" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameXp14" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+
+								<FontString name="KillLog_GeneralFrameCreepTitle" inherits="QuestTitleFont" justifyH="LEFT" text="KILLLOG_CREEP_TITLE">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameXp10" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameCreep1" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameCreepTitle" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameCreep2" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameCreep1" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameCreep3" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameCreep2" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameCreep4" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameCreep3" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameCreep5" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameCreep4" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameCreep6" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameCreep5" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameCreep7" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameCreep6" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameCreep8" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameCreep7" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameCreep9" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameCreep8" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameCreep10" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameCreep9" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameCreep11" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameCreep10" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameCreep12" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameCreep11" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameCreep13" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameCreep12" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameCreep14" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameCreep13" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="KillLog_GeneralFrameCreep15" inherits="QuestFontNormalSmall" justifyH="LEFT" hidden="true">
+									<Size>
+										<AbsDimension x="275" y="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="KillLog_GeneralFrameCreep14" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+							</Layer>
+						</Layers>
+						<Frames>
+                            <Frame name="KillLog_GeneralSpacerFrame">
+                                <Size>
+                                    <AbsDimension x="5" y="20"/>
+                                </Size>
+                                <Anchors>
+                                    <Anchor point="TOP" relativeTo="KillLog_GeneralFrameCreepTitle" relativePoint="BOTTOM">
+                                        <Offset>
+                                            <AbsDimension x="0" y="0"/>
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </Frame>
+						</Frames>
+					</Frame>
+				</ScrollChild>
+			</ScrollFrame>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				KillLog_GeneralFrame_OnLoad();
+			</OnLoad>
+			<OnShow>
+				KillLog_GeneralFrame_OnShow();
+			</OnShow>
+		</Scripts>
+	</Frame>
+</Ui>

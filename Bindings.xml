@@ -1,0 +1,17 @@
+<Bindings>
+	<Binding name="KILLLOG_TOGGLE" header="KILLLOG">
+		ToggleKillLog();
+	</Binding>
+	<Binding name="KILLLOG_GENERAL">
+		ToggleKillLog("KillLog_GeneralFrame");
+	</Binding>
+	<Binding name="KILLLOG_LIST">
+		ToggleKillLog("KillLog_ListFrame");
+	</Binding>
+	<Binding name="KILLLOG_DEATH">
+		ToggleKillLog("KillLog_DeathFrame");
+	</Binding>
+	<Binding name="KILLLOG_OPTIONS">
+		ToggleKillLog("KillLog_OptionsFrame");
+	</Binding>
+</Bindings>

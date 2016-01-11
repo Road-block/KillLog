@@ -1,0 +1,449 @@
+﻿<!--
+path: /KillLog/
+filename: KillLog_OptionsFrame.xml
+author: Daniel Risse <dan@risse.com>
+update: Detritis <Slynx - Quel'Thalas>	
+created: Mon, 17 Jan 2005 17:33:00 -0800
+updated: Thurs, 20 Jan 2007
+
+list frame: a listing of the creeps you have fought
+-->
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+	..\FrameXML\UI.xsd">
+	<Script file="KillLog_OptionsFrame.lua"/>
+
+	<Button name="KillLog_OptionsButtonTemplate" inherits="UIPanelButtonTemplate" virtual="true">
+		<Size>
+			<AbsDimension x="80" y="22"/>
+		</Size>
+	</Button>
+
+	<Button name="KillLog_BGColor" virtual="true">
+		<Size>
+			<AbsDimension x="32" y="32"/>
+		</Size>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture name="$parentSwatchBg">
+					<Size>
+						<AbsDimension x="14" y="14"/>
+					</Size>
+					<Anchors>
+						<Anchor point="CENTER">
+							<Offset>
+								<AbsDimension x="0" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<Color r="1.0" g="1.0" b="1.0"/>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK">
+				<FontString name="$parentText" inherits="GameFontNormalSmall">
+					<Anchors>
+						<Anchor point="LEFT" relativePoint="RIGHT">
+							<Offset>
+								<AbsDimension x="-2" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad>
+				getglobal(this:GetName().."Text"):SetText("SCT Color");
+			</OnLoad>
+			<OnClick>
+				KillLog_OpenColorPicker();
+			</OnClick>
+			<OnEnter>
+				getglobal(this:GetName().."SwatchBg"):SetVertexColor(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
+			</OnEnter>
+			<OnLeave>
+				if (KillLog_Options.color) then
+					getglobal(this:GetName().."SwatchBg"):SetVertexColor(KillLog_Options.color.r, KillLog_Options.color.g, KillLog_Options.color.b);
+				else
+					getglobal(this:GetName().."SwatchBg"):SetVertexColor( 0.0, 0.0, 0.0 );
+				end
+			</OnLeave>
+			<NormalTexture name="$parentNormalTexture" file="Interface\ChatFrame\ChatFrameColorSwatch"/>
+		</Scripts>
+	</Button>
+					
+	<Frame name="KillLog_OptionsFrameSliderTemplate" virtual="true">
+		<Size>
+			<AbsDimension x="290" y="32"/>
+		</Size>
+		<Frames>
+			<CheckButton name="$parentCheckButton" inherits="OptionsCheckButtonTemplate"/>
+			<Slider name="$parentSlider" inherits="OptionsSliderTemplate">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="$parentCheckButton" relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="10" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Slider>
+		</Frames>
+	</Frame>
+
+	<Frame name="KillLog_OptionsFrame" setAllPoints="true" enableMouse="true" parent="KillLogFrame" hidden="true" id="4">
+		<HitRectInsets>
+			<AbsInset left="0" right="30" top="0" bottom="75"/>
+		</HitRectInsets>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture name="KillLog_OptionsFrameHorizontalBarLeft" file="Interface\ClassTrainerFrame\UI-ClassTrainer-HorizontalBar">
+                    <Size>
+                        <AbsDimension x="256" y="16"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="15" y="-395"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                    <TexCoords left="0" right="1.0" top="0" bottom="0.25"/>
+                </Texture>
+                <Texture name="KillLog_OptionsFrameHorizontalBarRight" file="Interface\ClassTrainerFrame\UI-ClassTrainer-HorizontalBar">
+                    <Size>
+                        <AbsDimension x="75" y="16"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="LEFT" relativeTo="KillLog_OptionsFrameHorizontalBarLeft" relativePoint="RIGHT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                    <TexCoords left="0" right="0.29296875" top="0.25" bottom="0.5"/>
+                </Texture>
+            </Layer>
+        </Layers>
+		<Frames>
+			<Frame name="KillLog_OptionsFrameControls">
+				<Size>
+					<AbsDimension x="290" y="107"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPRIGHT" relativeTo="KillLog_OptionsFrame" relativePoint="TOPRIGHT">
+						<Offset>
+							<AbsDimension x="-67" y="-100"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Frames>
+					<CheckButton name="KillLog_OptionsFrameCheckButton1" inherits="OptionsCheckButtonTemplate">
+						<Anchors>
+							<Anchor point="TOPLEFT">
+								<Offset>
+									<AbsDimension x="10" y="-5"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								if ( this:GetChecked() ) then
+									PlaySound("igMainMenuOptionCheckBoxOff");
+								else
+									PlaySound("igMainMenuOptionCheckBoxOn");
+								end
+								KillLog_OptionsFrame_UpdateMaxOptions(this:GetChecked());
+							</OnClick>
+						</Scripts>
+					</CheckButton>
+					<CheckButton name="KillLog_OptionsFrameCheckButton2" inherits="OptionsCheckButtonTemplate">
+						<Size>
+							<AbsDimension x="26" y="26"/>
+						</Size>
+						<Anchors>
+							<Anchor point="TOP" relativeTo="KillLog_OptionsFrameCheckButton1" relativePoint="BOTTOM">
+								<Offset>
+									<AbsDimension x="10" y="2"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+					</CheckButton>
+					<CheckButton name="KillLog_OptionsFrameCheckButton3" inherits="OptionsCheckButtonTemplate">
+						<Anchors>
+							<Anchor point="TOP" relativeTo="KillLog_OptionsFrameCheckButton2" relativePoint="BOTTOM">
+								<Offset>
+									<AbsDimension x="-10" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								if ( this:GetChecked() ) then
+									PlaySound("igMainMenuOptionCheckBoxOff");
+								else
+									PlaySound("igMainMenuOptionCheckBoxOn");
+								end
+								KillLog_OptionsFrame_UpdateStoreCreepOptions(this:GetChecked());
+							</OnClick>
+						</Scripts>
+					</CheckButton>
+					<CheckButton name="KillLog_OptionsFrameCheckButton4" inherits="OptionsCheckButtonTemplate">
+						<Size>
+							<AbsDimension x="26" y="26"/>
+						</Size>
+						<Anchors>
+							<Anchor point="TOP" relativeTo="KillLog_OptionsFrameCheckButton3" relativePoint="BOTTOM">
+								<Offset>
+									<AbsDimension x="10" y="2"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+					</CheckButton>
+					<CheckButton name="KillLog_OptionsFrameCheckButton5" inherits="OptionsCheckButtonTemplate">
+						<Anchors>
+							<Anchor point="TOP" relativeTo="KillLog_OptionsFrameCheckButton4" relativePoint="BOTTOM">
+								<Offset>
+									<AbsDimension x="-10" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+					</CheckButton>
+
+					<CheckButton name="KillLog_OptionsFrameCheckButton6" inherits="OptionsCheckButtonTemplate">
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="KillLog_OptionsFrameCheckButton1" relativePoint="LEFT">
+								<Offset>
+									<AbsDimension x="145" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+					</CheckButton>
+					<CheckButton name="KillLog_OptionsFrameCheckButton7" inherits="OptionsCheckButtonTemplate">
+						<Anchors>
+							<Anchor point="TOP" relativeTo="KillLog_OptionsFrameCheckButton6" relativePoint="BOTTOM">
+								<Offset>
+									<AbsDimension x="0" y="4"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+					</CheckButton>
+					
+                    <CheckButton name="KillLog_OptionsFrameCheckButton8" inherits="OptionsCheckButtonTemplate">
+						<Anchors>
+							<Anchor point="TOP" relativeTo="KillLog_OptionsFrameCheckButton7" relativePoint="BOTTOM">
+								<Offset>
+									<AbsDimension x="0" y="4"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+					</CheckButton>
+                    
+					<CheckButton name="KillLog_OptionsFrameCheckButton9" inherits="OptionsCheckButtonTemplate">
+						<Anchors>
+							<Anchor point="TOP" relativeTo="KillLog_OptionsFrameCheckButton8" relativePoint="BOTTOM">
+								<Offset>
+									<AbsDimension x="0" y="4"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+					</CheckButton>
+					<CheckButton name="KillLog_OptionsFrameCheckButton10" inherits="OptionsCheckButtonTemplate">
+						<Anchors>
+							<Anchor point="TOP" relativeTo="KillLog_OptionsFrameCheckButton9" relativePoint="BOTTOM">
+								<Offset>
+									<AbsDimension x="0" y="4"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+					</CheckButton>
+
+					<CheckButton name="KillLog_OptionsFrameCheckButton11" inherits="OptionsCheckButtonTemplate">
+						<Anchors>
+							<Anchor point="TOP" relativeTo="KillLog_OptionsFrameCheckButton5" relativePoint="BOTTOM">
+								<Offset>
+									<AbsDimension x="0" y="-2"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								if ( this:GetChecked() ) then
+									PlaySound("igMainMenuOptionCheckBoxOff");
+								else
+									PlaySound("igMainMenuOptionCheckBoxOn");
+								end
+								KillLog_OptionsFrame_UpdateStoreLevel(this:GetChecked());
+							</OnClick>
+						</Scripts>
+					</CheckButton>
+					<Slider name="KillLog_OptionsFrameSlider1" inherits="OptionsSliderTemplate">
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="KillLog_OptionsFrameCheckButton11" relativePoint="LEFT">
+								<Offset>
+									<AbsDimension x="145" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+					</Slider>
+					<CheckButton name="KillLog_OptionsFrameCheckButton12" inherits="OptionsCheckButtonTemplate">
+						<Anchors>
+							<Anchor point="TOP" relativeTo="KillLog_OptionsFrameCheckButton11" relativePoint="BOTTOM">
+								<Offset>
+									<AbsDimension x="0" y="-2"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								if ( this:GetChecked() ) then
+									PlaySound("igMainMenuOptionCheckBoxOff");
+								else
+									PlaySound("igMainMenuOptionCheckBoxOn");
+								end
+								KillLog_OptionsFrame_UpdatePortraits(this:GetChecked());
+							</OnClick>
+						</Scripts>
+					</CheckButton>
+					<Slider name="KillLog_OptionsFrameSlider2" inherits="OptionsSliderTemplate">
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="KillLog_OptionsFrameCheckButton12" relativePoint="LEFT">
+								<Offset>
+									<AbsDimension x="145" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+					</Slider>
+
+					<CheckButton name="KillLog_OptionsFrameCheckButton13" inherits="OptionsCheckButtonTemplate">
+						<Anchors>
+							<Anchor point="TOP" relativeTo="KillLog_OptionsFrameCheckButton12" relativePoint="BOTTOM">
+								<Offset>
+									<AbsDimension x="0" y="-2"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								if ( this:GetChecked() ) then
+									PlaySound("igMainMenuOptionCheckBoxOff");
+								else
+									PlaySound("igMainMenuOptionCheckBoxOn");
+								end
+								KillLog_OptionsFrame_UpdateSCT(this:GetChecked());
+							</OnClick>
+						</Scripts>
+					</CheckButton>
+					<Button name="KillLog_OptionsFrameCheckButton14" inherits="KillLog_BGColor">
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="KillLog_OptionsFrameCheckButton13" relativePoint="LEFT">
+								<Offset>
+									<AbsDimension x="168" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+					</Button>
+					
+					<CheckButton name="KillLog_OptionsFrameCheckButton15" inherits="OptionsCheckButtonTemplate">
+						<Anchors>
+							<Anchor point="TOP" relativeTo="KillLog_OptionsFrameCheckButton13" relativePoint="BOTTOM">
+								<Offset>
+									<AbsDimension x="0" y="-10"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								if ( this:GetChecked() ) then
+									PlaySound("igMainMenuOptionCheckBoxOff");
+								else
+									PlaySound("igMainMenuOptionCheckBoxOn");
+								end
+								KillLog_OptionsFrame_UpdateDebugging(this:GetChecked());
+							</OnClick>
+						</Scripts>
+					</CheckButton>
+					<Slider name="KillLog_OptionsFrameSlider3" inherits="OptionsSliderTemplate">
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="KillLog_OptionsFrameCheckButton15" relativePoint="LEFT">
+								<Offset>
+									<AbsDimension x="145" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+					</Slider>
+					
+				</Frames>
+			</Frame>
+            <Button name="KillLog_OptionsFrameCancel" inherits="KillLog_OptionsButtonTemplate" text="CANCEL">
+                <Anchors>
+                    <Anchor point="CENTER" relativePoint="TOPLEFT" relativeTo="KillLog_OptionsFrame">
+                        <Offset>
+                            <AbsDimension x="302" y="-418"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        PlaySound("gsTitleOptionExit");
+						KillLog_OptionsFrame_Cancel();
+                        ToggleKillLog();
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="KillLog_OptionsFrameOkay" inherits="KillLog_OptionsButtonTemplate" text="OKAY">
+                <Anchors>
+                    <Anchor point="RIGHT" relativeTo="KillLog_OptionsFrameCancel" relativePoint="LEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        PlaySound("gsTitleOptionOK");
+                        KillLog_OptionsFrame_Save();
+                        ToggleKillLog();
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="KillLog_OptionsFrameDefaults" inherits="KillLog_OptionsButtonTemplate" text="DEFAULTS">
+                <Anchors>
+                    <Anchor point="RIGHT" relativeTo="KillLog_OptionsFrameOkay" relativePoint="LEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        PlaySound("igMainMenuOptionCheckBoxOn");
+                        KillLogFrame_SetDefaults();
+						KillLog_OptionsFrame_Load()
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="KillLog_OptionsFrameClear" inherits="KillLog_OptionsButtonTemplate" text="KILLLOG_CLEAR">
+                <Anchors>
+                    <Anchor point="RIGHT" relativeTo="KillLog_OptionsFrameDefaults" relativePoint="LEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        PlaySound("igMainMenuOptionCheckBoxOn");
+						StaticPopup_Show("KILLLOG_CLEAR");
+                    </OnClick>
+                </Scripts>
+            </Button>
+		</Frames>
+		<Scripts>
+			<OnShow>
+				KillLog_OptionsFrame_Load();
+			</OnShow>
+			<OnHide>
+				KillLog_OptionsFrame_Save();
+			</OnHide>
+		</Scripts>
+	</Frame>
+</Ui>
