@@ -1,7 +1,7 @@
 ## Interface: 11200
-## Title: Kill Log [|CFF87ADE42.6.2a|r]
+## Title: Kill Log [|CFF87ADE42.6.3|r]
 ## Author: Detritis
-## Version: 2.6.2a
+## Version: 2.6.3
 ## Notes: This AddOn keeps a record of your exploits fighting creeps in Azeroth.
 ## X-Date: December 28, 2006
 ## X-Version: KILLLOG_VERSION

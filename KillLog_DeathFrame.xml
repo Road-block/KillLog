@@ -10,270 +10,270 @@ death frame: Listing of your deaths
 -->
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 	..\FrameXML\UI.xsd">
-	<Script file="KillLog_DeathFrame.lua"/>
-	
-	<!-- template for creep name in faux scroll frame -->
-    <Button name="KillLog_DeathButtonTemplate" virtual="true">
-		<Size>
-			<AbsDimension x="300" y="32"/>
-		</Size>
-		<Layers>
-			<Layer level="BACKGROUND">
-                <FontString name="$parentText" inherits="GameFontNormal" justifyH="LEFT">
-					<Size>
-						<AbsDimension x="300" y="32"/>
-					</Size>
-					<Anchors>
-						<Anchor point="LEFT">
-							<Offset>
-								<AbsDimension x="25" y="0"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</FontString>
-			</Layer>
-		</Layers>
-		<Scripts>
-			<OnLoad>
-				this:RegisterForClicks("LeftButtonUp", "RightButtonUp");
-			</OnLoad>
-            <OnClick>
-				KillLog_DeathFrame_OnClick(arg1);
-			</OnClick>
-		</Scripts>
-	</Button>
+  <Script file="KillLog_DeathFrame.lua"/>
 
-	<Frame name="KillLog_DeathFrame" setAllPoints="true" enableMouse="true" parent="KillLogFrame" id="3" hidden="true">
-		<HitRectInsets>
-			<AbsInset left="0" right="30" top="0" bottom="75"/>
-		</HitRectInsets>
-		<Layers>
-			<Layer level="ARTWORK">
-				<Texture name="KillLog_DeathFrameSpacer" file="Interface\ClassTrainerFrame\UI-ClassTrainer-TopRight">
-					<Size>
-						<AbsDimension x="27" y="50"/>
-					</Size>
-					<Anchors>
-						<Anchor point="TOPRIGHT">
-							<Offset>
-								<AbsDimension x="-37" y="-75"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-					<TexCoords left="0.4453125" right="0.6875" top="0.3671875" bottom="0.56640625"/>
-				</Texture>
-			</Layer>
-            <Layer level="BACKGROUND">
-				<Texture name="KillLog_DeathFrameTopLeft" file="Interface\ItemTextFrame\ItemText-Stone-TopLeft">
-					<Size>
-						<AbsDimension x="258" y="250"/>
-					</Size>
-					<Anchors>
-						<Anchor point="TOPLEFT">
-							<Offset>
-								<AbsDimension x="23" y="-76"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-					<TexCoords left="0.07421875" right="1.0" top="0.28515625" bottom="1.0"/>
-				</Texture>
-				<Texture name="KillLog_DeathFrameTopRight" file="Interface\ItemTextFrame\ItemText-Stone-TopRight">
-					<Size>
-						<AbsDimension x="40" y="250"/>
-					</Size>
-					<Anchors>
-						<Anchor point="LEFT" relativeTo="KillLog_DeathFrameTopLeft" relativePoint="RIGHT">
-							<Offset>
-								<AbsDimension x="0" y="0"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-					<TexCoords left="0" right="0.671875" top="0.28515625" bottom="1.0"/>
-				</Texture>
-				<Texture name="KillLog_DeathFrameBottomLeft" file="Interface\ItemTextFrame\ItemText-Stone-BotLeft">
-					<Size>
-						<AbsDimension x="258" y="105"/>
-					</Size>
-					<Anchors>
-						<Anchor point="TOPRIGHT" relativeTo="KillLog_DeathFrameTopLeft" relativePoint="BOTTOMRIGHT">
-							<Offset>
-								<AbsDimension x="0" y="0"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-					<TexCoords left="0.07421875" right="1.0" top="0.0" bottom="0.68359375"/>
-				</Texture>
-				<Texture name="KillLog_DeathFrameBottomRight" file="Interface\ItemTextFrame\ItemText-Stone-BotRight">
-					<Size>
-						<AbsDimension x="40" y="105"/>
-					</Size>
-					<Anchors>
-						<Anchor point="LEFT" relativeTo="KillLog_DeathFrameBottomLeft" relativePoint="RIGHT">
-							<Offset>
-								<AbsDimension x="0" y="0"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-					<TexCoords left="0" right="0.671875" top="0.0" bottom="0.68359375"/>
-				</Texture>
-			</Layer>
-		</Layers>
-        <Frames>
-			<Frame name="KillLog_DeathFrame_HighlightFrame" hidden="true">
-				<Size>
-					<AbsDimension x="325" y="32"/>
-				</Size>
-				<Anchors>
-					<Anchor point="TOPLEFT"/>
-				</Anchors>
-				<Layers>
-					<Layer level="ARTWORK">
-						<Texture name="KillLog_DeathFrame_Highlight" file="Interface\QuestFrame\UI-QuestLogTitleHighlight" alphaMode="ADD"/>
-					</Layer>
-				</Layers>
-			</Frame>
-			<Frame name="KillLog_Death_TitleDropDown" inherits="UIDropDownMenuTemplate" id="1" hidden="true">
-				<Size>
-					<AbsDimension x="10" y="10"/>
-				</Size>
-				<Anchors>
-					<Anchor point="TOP">
-						<Offset>
-							<AbsDimension x="10" y="-60"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-				<Scripts>
-					<OnLoad>
-						KillLog_Death_TitleDropDown_OnLoad();
-					</OnLoad>
-				</Scripts>
-			</Frame>
-			<ScrollFrame name="KillLog_DeathScrollFrame" inherits="FauxScrollFrameTemplate">
-				<Size>
-					<AbsDimension x="296" y="350"/>
-				</Size>
-				<Anchors>
-					<Anchor point="TOPRIGHT" relativeTo="KillLog_DeathFrame" relativePoint="TOPRIGHT">
-						<Offset>
-							<AbsDimension x="-67" y="-80"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-				<Scripts>
-					<OnVerticalScroll>
-						FauxScrollFrame_OnVerticalScroll(KILLLOG_DEATH_TITLEBUTTON_HEIGHT, KillLog_DeathFrame_Update)
-					</OnVerticalScroll>
-				</Scripts>
-			</ScrollFrame>
-            
-            <Button name="KillLog_DeathButtonTitle" inherits="KillLog_DeathButtonTemplate" id="0" hidden="false">
-				<Size>
-			        <AbsDimension x="295" y="20"/>
-		        </Size>
-				<Anchors>
-					<Anchor point="LEFT" relativePoint="TOPLEFT">
-						<Offset>
-							<AbsDimension x="1" y="-86"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</Button>
-            <Button name="KillLog_DeathButton1" inherits="KillLog_DeathButtonTemplate" id="1" hidden="false">
-                <Anchors>
-					<Anchor point="LEFT" relativePoint="TOPLEFT">
-						<Offset>
-							<AbsDimension x="1" y="-117"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="KillLog_DeathButton2" inherits="KillLog_DeathButtonTemplate" id="2" hidden="false">
-				<Anchors>
-					<Anchor point="LEFT" relativePoint="TOPLEFT">
-						<Offset>
-							<AbsDimension x="1" y="-150"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="KillLog_DeathButton3" inherits="KillLog_DeathButtonTemplate" id="3" hidden="false">
-				<Anchors>
-					<Anchor point="LEFT" relativePoint="TOPLEFT">
-						<Offset>
-							<AbsDimension x="1" y="-183"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="KillLog_DeathButton4" inherits="KillLog_DeathButtonTemplate" id="4" hidden="false">
-				<Anchors>
-					<Anchor point="LEFT" relativePoint="TOPLEFT">
-						<Offset>
-							<AbsDimension x="1" y="-216"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="KillLog_DeathButton5" inherits="KillLog_DeathButtonTemplate" id="5" hidden="false">
-				<Anchors>
-					<Anchor point="LEFT" relativePoint="TOPLEFT">
-						<Offset>
-							<AbsDimension x="1" y="-249"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="KillLog_DeathButton6" inherits="KillLog_DeathButtonTemplate" id="6" hidden="false">
-				<Anchors>
-					<Anchor point="LEFT" relativePoint="TOPLEFT">
-						<Offset>
-							<AbsDimension x="1" y="-282"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="KillLog_DeathButton7" inherits="KillLog_DeathButtonTemplate" id="7" hidden="false">
-				<Anchors>
-					<Anchor point="LEFT" relativePoint="TOPLEFT">
-						<Offset>
-							<AbsDimension x="1" y="-315"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="KillLog_DeathButton8" inherits="KillLog_DeathButtonTemplate" id="8" hidden="false">
-				<Anchors>
-					<Anchor point="LEFT" relativePoint="TOPLEFT">
-						<Offset>
-							<AbsDimension x="1" y="-348"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="KillLog_DeathButton9" inherits="KillLog_DeathButtonTemplate" id="9" hidden="false">
-				<Anchors>
-					<Anchor point="LEFT" relativePoint="TOPLEFT">
-						<Offset>
-							<AbsDimension x="1" y="-381"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="KillLog_DeathButton10" inherits="KillLog_DeathButtonTemplate" id="10" hidden="false">
-				<Anchors>
-					<Anchor point="LEFT" relativePoint="TOPLEFT">
-						<Offset>
-							<AbsDimension x="1" y="-414"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</Button>
-		</Frames>
-		<Scripts>
-			<Onshow>
-				KillLog_DeathFrame_OnShow()
-			</Onshow>
-		</Scripts>
-	</Frame>
+  <!-- template for creep name in faux scroll frame -->
+  <Button name="KillLog_DeathButtonTemplate" virtual="true">
+    <Size>
+      <AbsDimension x="300" y="32"/>
+    </Size>
+    <Layers>
+      <Layer level="BACKGROUND">
+        <FontString name="$parentText" inherits="GameFontNormal" justifyH="LEFT">
+          <Size>
+            <AbsDimension x="300" y="32"/>
+          </Size>
+          <Anchors>
+            <Anchor point="LEFT">
+              <Offset>
+                <AbsDimension x="25" y="0"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </FontString>
+      </Layer>
+    </Layers>
+    <Scripts>
+      <OnLoad>
+        this:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+      </OnLoad>
+      <OnClick>
+        KillLog_DeathFrame_OnClick(arg1);
+      </OnClick>
+    </Scripts>
+  </Button>
+
+  <Frame name="KillLog_DeathFrame" setAllPoints="true" enableMouse="true" parent="KillLogFrame" id="3" hidden="true">
+    <HitRectInsets>
+      <AbsInset left="0" right="30" top="0" bottom="75"/>
+    </HitRectInsets>
+    <Layers>
+      <Layer level="ARTWORK">
+        <Texture name="KillLog_DeathFrameSpacer" file="Interface\ClassTrainerFrame\UI-ClassTrainer-TopRight">
+          <Size>
+            <AbsDimension x="27" y="50"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPRIGHT">
+              <Offset>
+                <AbsDimension x="-37" y="-75"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+          <TexCoords left="0.4453125" right="0.6875" top="0.3671875" bottom="0.56640625"/>
+        </Texture>
+      </Layer>
+      <Layer level="BACKGROUND">
+        <Texture name="KillLog_DeathFrameTopLeft" file="Interface\ItemTextFrame\ItemText-Stone-TopLeft">
+          <Size>
+            <AbsDimension x="258" y="250"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPLEFT">
+              <Offset>
+                <AbsDimension x="23" y="-76"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+          <TexCoords left="0.07421875" right="1.0" top="0.28515625" bottom="1.0"/>
+        </Texture>
+        <Texture name="KillLog_DeathFrameTopRight" file="Interface\ItemTextFrame\ItemText-Stone-TopRight">
+          <Size>
+            <AbsDimension x="40" y="250"/>
+          </Size>
+          <Anchors>
+            <Anchor point="LEFT" relativeTo="KillLog_DeathFrameTopLeft" relativePoint="RIGHT">
+              <Offset>
+                <AbsDimension x="0" y="0"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+          <TexCoords left="0" right="0.671875" top="0.28515625" bottom="1.0"/>
+        </Texture>
+        <Texture name="KillLog_DeathFrameBottomLeft" file="Interface\ItemTextFrame\ItemText-Stone-BotLeft">
+          <Size>
+            <AbsDimension x="258" y="105"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPRIGHT" relativeTo="KillLog_DeathFrameTopLeft" relativePoint="BOTTOMRIGHT">
+              <Offset>
+                <AbsDimension x="0" y="0"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+          <TexCoords left="0.07421875" right="1.0" top="0.0" bottom="0.68359375"/>
+        </Texture>
+        <Texture name="KillLog_DeathFrameBottomRight" file="Interface\ItemTextFrame\ItemText-Stone-BotRight">
+          <Size>
+            <AbsDimension x="40" y="105"/>
+          </Size>
+          <Anchors>
+            <Anchor point="LEFT" relativeTo="KillLog_DeathFrameBottomLeft" relativePoint="RIGHT">
+              <Offset>
+                <AbsDimension x="0" y="0"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+          <TexCoords left="0" right="0.671875" top="0.0" bottom="0.68359375"/>
+        </Texture>
+      </Layer>
+    </Layers>
+    <Frames>
+      <Frame name="KillLog_DeathFrame_HighlightFrame" hidden="true">
+        <Size>
+          <AbsDimension x="325" y="32"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT"/>
+        </Anchors>
+        <Layers>
+          <Layer level="ARTWORK">
+            <Texture name="KillLog_DeathFrame_Highlight" file="Interface\QuestFrame\UI-QuestLogTitleHighlight" alphaMode="ADD"/>
+          </Layer>
+        </Layers>
+      </Frame>
+      <Frame name="KillLog_Death_TitleDropDown" inherits="UIDropDownMenuTemplate" id="1" hidden="true">
+        <Size>
+          <AbsDimension x="10" y="10"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOP">
+            <Offset>
+              <AbsDimension x="10" y="-60"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            KillLog_Death_TitleDropDown_OnLoad();
+          </OnLoad>
+        </Scripts>
+      </Frame>
+      <ScrollFrame name="KillLog_DeathScrollFrame" inherits="FauxScrollFrameTemplate">
+        <Size>
+          <AbsDimension x="296" y="350"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPRIGHT" relativeTo="KillLog_DeathFrame" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="-67" y="-80"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnVerticalScroll>
+            FauxScrollFrame_OnVerticalScroll(KILLLOG_DEATH_TITLEBUTTON_HEIGHT, KillLog_DeathFrame_Update)
+          </OnVerticalScroll>
+        </Scripts>
+      </ScrollFrame>
+
+      <Button name="KillLog_DeathButtonTitle" inherits="KillLog_DeathButtonTemplate" id="0" hidden="false">
+        <Size>
+          <AbsDimension x="295" y="20"/>
+        </Size>
+        <Anchors>
+          <Anchor point="LEFT" relativePoint="TOPLEFT">
+            <Offset>
+              <AbsDimension x="1" y="-86"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="KillLog_DeathButton1" inherits="KillLog_DeathButtonTemplate" id="1" hidden="false">
+        <Anchors>
+          <Anchor point="LEFT" relativePoint="TOPLEFT">
+            <Offset>
+              <AbsDimension x="1" y="-117"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="KillLog_DeathButton2" inherits="KillLog_DeathButtonTemplate" id="2" hidden="false">
+        <Anchors>
+          <Anchor point="LEFT" relativePoint="TOPLEFT">
+            <Offset>
+              <AbsDimension x="1" y="-150"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="KillLog_DeathButton3" inherits="KillLog_DeathButtonTemplate" id="3" hidden="false">
+        <Anchors>
+          <Anchor point="LEFT" relativePoint="TOPLEFT">
+            <Offset>
+              <AbsDimension x="1" y="-183"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="KillLog_DeathButton4" inherits="KillLog_DeathButtonTemplate" id="4" hidden="false">
+        <Anchors>
+          <Anchor point="LEFT" relativePoint="TOPLEFT">
+            <Offset>
+              <AbsDimension x="1" y="-216"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="KillLog_DeathButton5" inherits="KillLog_DeathButtonTemplate" id="5" hidden="false">
+        <Anchors>
+          <Anchor point="LEFT" relativePoint="TOPLEFT">
+            <Offset>
+              <AbsDimension x="1" y="-249"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="KillLog_DeathButton6" inherits="KillLog_DeathButtonTemplate" id="6" hidden="false">
+        <Anchors>
+          <Anchor point="LEFT" relativePoint="TOPLEFT">
+            <Offset>
+              <AbsDimension x="1" y="-282"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="KillLog_DeathButton7" inherits="KillLog_DeathButtonTemplate" id="7" hidden="false">
+        <Anchors>
+          <Anchor point="LEFT" relativePoint="TOPLEFT">
+            <Offset>
+              <AbsDimension x="1" y="-315"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="KillLog_DeathButton8" inherits="KillLog_DeathButtonTemplate" id="8" hidden="false">
+        <Anchors>
+          <Anchor point="LEFT" relativePoint="TOPLEFT">
+            <Offset>
+              <AbsDimension x="1" y="-348"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="KillLog_DeathButton9" inherits="KillLog_DeathButtonTemplate" id="9" hidden="false">
+        <Anchors>
+          <Anchor point="LEFT" relativePoint="TOPLEFT">
+            <Offset>
+              <AbsDimension x="1" y="-381"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="KillLog_DeathButton10" inherits="KillLog_DeathButtonTemplate" id="10" hidden="false">
+        <Anchors>
+          <Anchor point="LEFT" relativePoint="TOPLEFT">
+            <Offset>
+              <AbsDimension x="1" y="-414"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+    </Frames>
+    <Scripts>
+      <Onshow>
+        KillLog_DeathFrame_OnShow()
+      </Onshow>
+    </Scripts>
+  </Frame>
 </Ui>

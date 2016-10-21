@@ -10,15 +10,15 @@ Chat Parse: Used to scrap information from Chat Messages
 
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
-	<Script file="ChatParse.lua"/>
-	<Frame name="ChatParseFrame" parent="UIParent" hidden="true">
-		<Scripts>
-			<OnLoad>
-				ChatParse_OnLoad();
-			</OnLoad>
-			<OnEvent>
-				ChatParse_OnEvent(event);
-			</OnEvent>
-		</Scripts>
-	</Frame>
+  <Script file="ChatParse.lua"/>
+  <Frame name="ChatParseFrame" parent="UIParent" hidden="true">
+    <Scripts>
+      <OnLoad>
+        ChatParse_OnLoad();
+      </OnLoad>
+      <OnEvent>
+        ChatParse_OnEvent(event);
+      </OnEvent>
+    </Scripts>
+  </Frame>
 </Ui>

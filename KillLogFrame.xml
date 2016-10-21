@@ -10,225 +10,225 @@ Kill Log: A record of your exploits fighting creeps in Azeroth
 -->
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
-	<Script file="KillLogFrame.lua"/>
-	<Script file="localization.lua"/>
+  <Script file="KillLogFrame.lua"/>
+  <Script file="localization.lua"/>
 
-	<Button name="KillLogFrameTabButtonTemplate" inherits="CharacterFrameTabButtonTemplate" virtual="true">
-		<Scripts>
-			<OnLoad>
-				this:SetFrameLevel(this:GetFrameLevel() + 4);
-			</OnLoad>
-			<OnClick>
-				PanelTemplates_Tab_OnClick(KillLogFrame);
-				KillLogTab_OnClick();
-			</OnClick>
-			<OnShow>
-				PanelTemplates_TabResize(10);
-				getglobal(this:GetName().."HighlightTexture"):SetWidth(this:GetTextWidth() + 30);
-			</OnShow>
-		</Scripts>
-	</Button>
+  <Button name="KillLogFrameTabButtonTemplate" inherits="CharacterFrameTabButtonTemplate" virtual="true">
+    <Scripts>
+      <OnLoad>
+        this:SetFrameLevel(this:GetFrameLevel() + 4);
+      </OnLoad>
+      <OnClick>
+        PanelTemplates_Tab_OnClick(KillLogFrame);
+        KillLogTab_OnClick();
+      </OnClick>
+      <OnShow>
+        PanelTemplates_TabResize(10);
+        getglobal(this:GetName().."HighlightTexture"):SetWidth(this:GetTextWidth() + 30);
+      </OnShow>
+    </Scripts>
+  </Button>
 
-	<!-- template for creep portrait in list detail -->
-	<Texture name="KillLog_PlayerPortraitTemplate" hidden="true" virtual="true">
-		<Size>
-			<AbsDimension x="43" y="43"/>
-		</Size>
-		<Anchors>
-			<Anchor point="TOPLEFT" >
-				<Offset>
-					<AbsDimension x="6" y="2"/>
-				</Offset>
-			</Anchor>
-		</Anchors>
-	</Texture>
+  <!-- template for creep portrait in list detail -->
+  <Texture name="KillLog_PlayerPortraitTemplate" hidden="true" virtual="true">
+    <Size>
+      <AbsDimension x="43" y="43"/>
+    </Size>
+    <Anchors>
+      <Anchor point="TOPLEFT" >
+        <Offset>
+          <AbsDimension x="6" y="2"/>
+        </Offset>
+      </Anchor>
+    </Anchors>
+  </Texture>
 
-	<!-- temporary, create frame to handle initialization; once complete, destroy frame -->
-	<Frame name="KillLogLoadingFrame">
-		<Scripts>
-			<OnLoad>
-				KillLogLoadingFrame_OnLoad();
-			</OnLoad>
-			<OnEvent>
-				KillLogLoadingFrame_OnEvent(event);
-			</OnEvent>
-			<OnUpdate>
-				KillLogLoadingFrame_OnUpdate();
-			</OnUpdate>
-		</Scripts>
-	</Frame>
+  <!-- temporary, create frame to handle initialization; once complete, destroy frame -->
+  <Frame name="KillLogLoadingFrame">
+    <Scripts>
+      <OnLoad>
+        KillLogLoadingFrame_OnLoad();
+      </OnLoad>
+      <OnEvent>
+        KillLogLoadingFrame_OnEvent(event);
+      </OnEvent>
+      <OnUpdate>
+        KillLogLoadingFrame_OnUpdate();
+      </OnUpdate>
+    </Scripts>
+  </Frame>
 
-	<Frame name="KillLogFrame" toplevel="true" movable="true" parent="UIParent" hidden="true">
-		<Size>
-			<AbsDimension x="384" y="512"/>
-		</Size>
-		<Anchors>
-			<Anchor point="TOPLEFT">
-				<Offset>
-					<AbsDimension x="0" y="-104"/>
-				</Offset>
-			</Anchor>
-		</Anchors>
-		<HitRectInsets>
-			<AbsInset left="0" right="30" top="0" bottom="45"/>
-		</HitRectInsets>
-		<Layers>		
-			<Layer level="BACKGROUND">
-				<Texture file="Interface\QuestFrame\UI-QuestLog-BookIcon">
-					<Size>
-						<AbsDimension x="64" y="64"/>
-					</Size>
-					<Anchors>
-						<Anchor point="TOPLEFT">
-							<Offset>
-								<AbsDimension x="6" y="-4"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</Texture>	 
-			</Layer>
-			<Layer level="ARTWORK">
-				<Texture file="Interface\ClassTrainerFrame\UI-ClassTrainer-TopLeft">
-					<Size>
-						<AbsDimension x="256" y="256"/>
-					</Size>
-					<Anchors>
-						<Anchor point="TOPLEFT">
-							<Offset>
-								<AbsDimension x="2" y="-1"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</Texture>
-				<Texture file="Interface\ClassTrainerFrame\UI-ClassTrainer-TopRight">
-					<Size>
-						<AbsDimension x="128" y="256"/>
-					</Size>
-					<Anchors>
-						<Anchor point="TOPRIGHT">
-							<Offset>
-								<AbsDimension x="2" y="-1"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</Texture>
-				<Texture file="Interface\PaperDollInfoFrame\UI-Character-General-BottomLeft">
-					<Size>
-						<AbsDimension x="256" y="256"/>
-					</Size>
-					<Anchors>
-						<Anchor point="BOTTOMLEFT">
-							<Offset>
-								<AbsDimension x="2" y="-1"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</Texture>
-				<Texture file="Interface\PaperDollInfoFrame\UI-Character-General-BottomRight">
-					<Size>
-						<AbsDimension x="128" y="256"/>
-					</Size>
-					<Anchors>
-						<Anchor point="BOTTOMRIGHT">
-							<Offset>
-								<AbsDimension x="2" y="-1"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</Texture>
-				<FontString name="KillLogTitleText" inherits="GameFontHighlight" text="KILLLOG_TITLE">
-					<Size>
-					    <AbsDimension x="300" y="14"/>
-					</Size>
-					<Anchors>
-						<Anchor point="TOP" relativeTo="KillLogFrame" relativePoint="TOP">
-							<Offset>
-								<AbsDimension x="0" y="-17"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</FontString>
-			</Layer>
-		</Layers>
-		<Frames>
-            <Button name="KillLog_PlayerListPortrait">
-				<Layers>
-					<Layer level="BACKGROUND">
-						<Texture name="KillLog_ListFrame_PlayerPortrait1" inherits="KillLog_PlayerPortraitTemplate"/>
-					</Layer>
-				</Layers>
-                <Scripts>
-                    <OnLoad>
-                        KillLog_ListFrame_PlayerPortrait1:SetTexture("Interface\\CharacterFrame\\TemporaryPortrait-Monster");
-						KillLog_ListFrame_PlayerPortrait1:Show();
-                    </OnLoad>
-                </Scripts>
-			</Button>
-            
-            <Button name="KillLogCloseButton" inherits="UIPanelCloseButton">
-				<Anchors>
-					<Anchor point="CENTER" relativeTo="KillLogFrame" relativePoint="TOPRIGHT">
-						<Offset>
-							<AbsDimension x="-44" y="-26"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-				<Scripts>
-					<OnLoad>
-						this:SetFrameLevel(this:GetFrameLevel() + 4);
-					</OnLoad>
-				</Scripts>
-			</Button>
-			<Button name="KillLogFrameTab1" inherits="KillLogFrameTabButtonTemplate" id="1" text="KILLLOG_TAB_GENERAL">
-				<Anchors>
-					<Anchor point="CENTER" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="65" y="61"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="KillLogFrameTab2" inherits="KillLogFrameTabButtonTemplate" id="2" text="KILLLOG_TAB_LIST">
-				<Anchors>
-				   <Anchor point="LEFT" relativeTo="KillLogFrameTab1" relativePoint="RIGHT">
-						<Offset>
-							<AbsDimension x="-15" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="KillLogFrameTab3" inherits="KillLogFrameTabButtonTemplate" id="3" text="KILLLOG_TAB_DEATH">
-				<Anchors>
-				   <Anchor point="LEFT" relativeTo="KillLogFrameTab2" relativePoint="RIGHT">
-						<Offset>
-							<AbsDimension x="-15" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="KillLogFrameTab4" inherits="KillLogFrameTabButtonTemplate" id="4" text="KILLLOG_TAB_OPTIONS">
-				<Anchors>
-				   <Anchor point="LEFT" relativeTo="KillLogFrameTab3" relativePoint="RIGHT">
-						<Offset>
-							<AbsDimension x="-15" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</Button>
-		</Frames>
-		<Scripts>
-			<OnLoad>
-				KillLogFrame_OnLoad();
-			</OnLoad>
-			<OnEvent>
-				KillLogFrame_OnEvent(event);
-			</OnEvent>
-			<OnShow>
-				KillLogFrame_OnShow();
-			</OnShow>
-			<OnHide>
-				KillLogFrame_OnHide();
-			</OnHide>
-		</Scripts>
-	</Frame>
+  <Frame name="KillLogFrame" toplevel="true" movable="true" parent="UIParent" hidden="true">
+    <Size>
+      <AbsDimension x="384" y="512"/>
+    </Size>
+    <Anchors>
+      <Anchor point="TOPLEFT">
+        <Offset>
+          <AbsDimension x="0" y="-104"/>
+        </Offset>
+      </Anchor>
+    </Anchors>
+    <HitRectInsets>
+      <AbsInset left="0" right="30" top="0" bottom="45"/>
+    </HitRectInsets>
+    <Layers>
+      <Layer level="BACKGROUND">
+        <Texture file="Interface\QuestFrame\UI-QuestLog-BookIcon">
+          <Size>
+            <AbsDimension x="64" y="64"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPLEFT">
+              <Offset>
+                <AbsDimension x="6" y="-4"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </Texture>
+      </Layer>
+      <Layer level="ARTWORK">
+        <Texture file="Interface\ClassTrainerFrame\UI-ClassTrainer-TopLeft">
+          <Size>
+            <AbsDimension x="256" y="256"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPLEFT">
+              <Offset>
+                <AbsDimension x="2" y="-1"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </Texture>
+        <Texture file="Interface\ClassTrainerFrame\UI-ClassTrainer-TopRight">
+          <Size>
+            <AbsDimension x="128" y="256"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPRIGHT">
+              <Offset>
+                <AbsDimension x="2" y="-1"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </Texture>
+        <Texture file="Interface\PaperDollInfoFrame\UI-Character-General-BottomLeft">
+          <Size>
+            <AbsDimension x="256" y="256"/>
+          </Size>
+          <Anchors>
+            <Anchor point="BOTTOMLEFT">
+              <Offset>
+                <AbsDimension x="2" y="-1"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </Texture>
+        <Texture file="Interface\PaperDollInfoFrame\UI-Character-General-BottomRight">
+          <Size>
+            <AbsDimension x="128" y="256"/>
+          </Size>
+          <Anchors>
+            <Anchor point="BOTTOMRIGHT">
+              <Offset>
+                <AbsDimension x="2" y="-1"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </Texture>
+        <FontString name="KillLogTitleText" inherits="GameFontHighlight" text="KILLLOG_TITLE">
+          <Size>
+            <AbsDimension x="300" y="14"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOP" relativeTo="KillLogFrame" relativePoint="TOP">
+              <Offset>
+                <AbsDimension x="0" y="-17"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </FontString>
+      </Layer>
+    </Layers>
+    <Frames>
+      <Button name="KillLog_PlayerListPortrait">
+        <Layers>
+          <Layer level="BACKGROUND">
+            <Texture name="KillLog_ListFrame_PlayerPortrait1" inherits="KillLog_PlayerPortraitTemplate"/>
+          </Layer>
+        </Layers>
+        <Scripts>
+          <OnLoad>
+            KillLog_ListFrame_PlayerPortrait1:SetTexture("Interface\\CharacterFrame\\TemporaryPortrait-Monster");
+            KillLog_ListFrame_PlayerPortrait1:Show();
+          </OnLoad>
+        </Scripts>
+      </Button>
+
+      <Button name="KillLogCloseButton" inherits="UIPanelCloseButton">
+        <Anchors>
+          <Anchor point="CENTER" relativeTo="KillLogFrame" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="-44" y="-26"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            this:SetFrameLevel(this:GetFrameLevel() + 4);
+          </OnLoad>
+        </Scripts>
+      </Button>
+      <Button name="KillLogFrameTab1" inherits="KillLogFrameTabButtonTemplate" id="1" text="KILLLOG_TAB_GENERAL">
+        <Anchors>
+          <Anchor point="CENTER" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="65" y="61"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="KillLogFrameTab2" inherits="KillLogFrameTabButtonTemplate" id="2" text="KILLLOG_TAB_LIST">
+        <Anchors>
+          <Anchor point="LEFT" relativeTo="KillLogFrameTab1" relativePoint="RIGHT">
+            <Offset>
+              <AbsDimension x="-15" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="KillLogFrameTab3" inherits="KillLogFrameTabButtonTemplate" id="3" text="KILLLOG_TAB_DEATH">
+        <Anchors>
+          <Anchor point="LEFT" relativeTo="KillLogFrameTab2" relativePoint="RIGHT">
+            <Offset>
+              <AbsDimension x="-15" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="KillLogFrameTab4" inherits="KillLogFrameTabButtonTemplate" id="4" text="KILLLOG_TAB_OPTIONS">
+        <Anchors>
+          <Anchor point="LEFT" relativeTo="KillLogFrameTab3" relativePoint="RIGHT">
+            <Offset>
+              <AbsDimension x="-15" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+    </Frames>
+    <Scripts>
+      <OnLoad>
+        KillLogFrame_OnLoad();
+      </OnLoad>
+      <OnEvent>
+        KillLogFrame_OnEvent(event);
+      </OnEvent>
+      <OnShow>
+        KillLogFrame_OnShow();
+      </OnShow>
+      <OnHide>
+        KillLogFrame_OnHide();
+      </OnHide>
+    </Scripts>
+  </Frame>
 </Ui>
